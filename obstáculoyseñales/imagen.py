@@ -1,5 +1,7 @@
+import tensorflow as tf
 from tensorflow import keras
 import numpy as np
+import cv2
 import time
 from keras.models import Sequential
 from keras.optimizers import Adam
@@ -9,7 +11,19 @@ from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 def tarea_2E(epoch , batch):
     # Cargar los datos de entrenamiento y test tal y como nos los sirve keras (MNIST de Yann Lecun)
     (X_train, Y_train), (X_test, Y_test) = datasets.cifar10.load_data()
-
+    
+    # Guardar los datos en archivos Numpy
+    #np.save('train_images.npy', X_train)
+    #np.save('train_labels.npy', Y_train)
+    #np.save('test_images.npy', X_test)
+    #np.save('test_labels.npy', Y_test)
+    
+    # Cargar los datos desde archivos Numpy
+    #X_train = np.load('train_images.npy')
+    #Y_train = np.load('train_labels.npy')
+    #X_test = np.load('test_images.npy')
+    #Y_test = np.load('test_labels.npy')
+    
     # Normalizar las imágenes
     X_train, X_test = X_train / 255.0, X_test / 255.0
 
@@ -20,7 +34,7 @@ def tarea_2E(epoch , batch):
     model = Sequential()
     
     #Añadimos una capa de Conv con 32 neuronas y escribimos las dimensiones de las imágenes de entrada
-    model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)))
+    model.add(Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)))
     
     #Añadimos una capa de MaxPooling2D
     model.add(MaxPooling2D((2, 2)))
@@ -43,9 +57,11 @@ def tarea_2E(epoch , batch):
     
     #Usamos compile para compilar el modelo
     model.compile(loss='sparse_categorical_crossentropy', optimizer=optimizador, metrics=['accuracy'])
-
+    
+    history = model.fit(X_train, Y_train, epochs=epoch, validation_data=(X_test, Y_test))
+    
     #Entrenamos el modelo
-    model.fit(X_train, Y_train, epochs=epoch, batch_size=batch, validation_split=0.1)
+    #model.fit(X_train, Y_train, epochs=epoch, batch_size=batch, validation_split=0.1)
 
     #Una vez entrenado usamos predict
     Y_pred = model.predict(X_test)
@@ -60,14 +76,26 @@ def tarea_2E(epoch , batch):
     endTime = time.time()
 
     #Evaluamos el modelo
-    loss, accuracy = model.evaluate(X_test, Y_test)
+    loss, accuracy = model.evaluate(X_test, Y_test, verbose=2)
+    imagen = cv2.imread("imagen.jpg")
+    imagen = cv2.resize(imagen, (32, 32))  # Ajusta el tamaño según tu modelo
+    imagen = np.reshape(imagen, [1, 32, 32, 3])  # 3 canales (RGB)
+
+    # Obtener las probabilidades de las clases
+    probabilidades = model.predict(imagen)
+
+    # Seleccionar la clase con la probabilidad más alta para cada imagen
+    clases_predichas = [np.argmax(p) for p in probabilidades]
+
+    print(f"Clases predichas: {clases_predichas}")
 
     #Sacamos el tiempo total restando el tiempo fin menos el tiempo de inicio
     totalTime = endTime - startTime
+    print(f"Precisión en el conjunto de prueba: {accuracy}")
     print(f"Tasas acierto test y tiempo: {precisionTest:.2%}, {totalTime:.3f} s con loss {loss:.4f} y accuracy {accuracy:.4f}.")
 
 def main():
-    tarea_2E(epoch = 8, batch = 32)
+    tarea_2E(epoch = 10, batch = 32)
     return 0
 
 if __name__ == "__main__":
