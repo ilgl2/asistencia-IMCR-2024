@@ -1,0 +1,5 @@
+tensorflow-hub
+tensorflow
+scipy
+flask
+numpy
