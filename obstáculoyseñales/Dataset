@@ -1,4 +1,0 @@
-CIFAR-10: Este conjunto de datos contiene 60,000 imágenes en color de 32x32 píxeles, divididas en 10 clases diferentes (como automóviles, camiones, señales de tráfico, etc.). Es ampliamente utilizado para tareas de clasificación de imágenes y es un buen punto de partida para tu proyecto1.
-KITTI Vision Benchmark Suite: Este dataset se centra en la detección de objetos en entornos urbanos. Contiene imágenes de cámaras y datos LiDAR recopilados desde un vehículo en movimiento. Puedes encontrar imágenes de calles, automóviles, peatones y señales de tráfico2.
-German Traffic Sign Recognition Benchmark (GTSRB): Este conjunto de datos se enfoca en señales de tráfico. Contiene más de 50,000 imágenes de señales de tráfico en alta resolución, clasificadas en 43 categorías. Es ideal para entrenar modelos de detección y clasificación de señales de tráfico3.
-Caltech-256
