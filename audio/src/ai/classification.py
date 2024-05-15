@@ -16,8 +16,6 @@ with tf.io.gfile.GFile(__MODEL.class_map_path().numpy()) as csvfile:
 
 def classify(file: str):
   # Load file
-  if not os.path.exists(file):
-    raise FileNotFoundError("File not found")
   sample_rate, wav_data = wavfile.read(file, 'rb')
   
   # Stereo check
@@ -33,7 +31,7 @@ def classify(file: str):
 
   scores, embeddings, spectrogram = __MODEL(wav_data)
   scores_np = scores.numpy()
-  infered_class = __CLASS_NAMES[scores_np.mean(axis=0).argmax()]
+  infered_class = [__CLASS_NAMES[idx] for idx in scores_np.mean(axis=0).argpartition(-3)[-3:]]
   return infered_class
 
 def __to_mono(data):
