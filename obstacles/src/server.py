@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 
+import ai.reader as reader
 import ai.classification as classification
 
 app = Flask(__name__)
@@ -13,7 +14,8 @@ def classify():
     for filename in files:
         # try:
             preditiction = classification.classify(files[filename])
-            response.append({"filename": filename, "text": preditiction})
+            transcription = reader.read(files[filename])
+            response.append({"filename": filename, "text": preditiction, "transcription": transcription})
         # except:
             print(f"Error processing file: {filename}")
     return jsonify(response), 200
