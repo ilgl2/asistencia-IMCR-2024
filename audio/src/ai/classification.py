@@ -31,7 +31,7 @@ def classify(file: str):
 
   scores, embeddings, spectrogram = __MODEL(wav_data)
   scores_np = scores.numpy()
-  infered_class = [__CLASS_NAMES[idx] for idx in scores_np.mean(axis=0).argpartition(-3)[-3:]]
+  infered_class = __CLASS_NAMES[scores_np.mean(axis=0).argmax()]
   return infered_class
 
 def __to_mono(data):

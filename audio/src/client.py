@@ -34,7 +34,7 @@ class Client():
                 wavfile.setparams((1, 2, recorder.sample_rate, recorder.frame_length, "NONE", "NONE"))
                 wavfile.writeframes(struct.pack("h" * len(frame), *frame))
                 buffer.seek(0)
-                response = requests.post('http://localhost:8000/classify/', files={"temp.wav":buffer.read()})
+                response = requests.post('http://localhost:8000/classify/audio/', files={"temp.wav":buffer.read()})
                 print(response.json())
         except KeyboardInterrupt:
             pass
